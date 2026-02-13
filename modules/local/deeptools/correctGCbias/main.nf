@@ -8,6 +8,7 @@ process CORRECTGCBIAS {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/deeptools:3.5.5--pyhdfd78af_0' :
         'biocontainers/deeptools:3.5.5--pyhdfd78af_0' }"
+    conda "${moduleDir}/environment.yml"
 
     input:
     tuple val(meta), path(bam), path(bai), path(genome_2bit), path(freq)
