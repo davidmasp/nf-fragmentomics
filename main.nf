@@ -9,6 +9,7 @@ nextflow.enable.dsl = 2
 
 include { FRAGMENTOMICS } from './workflows/fragmentomics.nf'
 include { VERSIONS } from './modules/local/utils/versions.nf'
+include { FA_TO_TWOBIT } from './modules/local/ucsctools/main.nf'
 
 def create_target_channel(LinkedHashMap row) {
     return [row.source, file(row.bed)]
@@ -36,8 +37,16 @@ workflow {
 
     main:
     // Init param files
+    genome_fasta = params.genome_fasta ? channel.fromPath(params.genome_fasta) : channel.empty()
     genome_2bit = params.genome_2bit ? channel.fromPath(params.genome_2bit) : channel.empty()
     blacklist_bed = params.blacklist_bed ? channel.fromPath(params.blacklist_bed) : channel.empty()
+
+    ch_versions = channel.empty()
+    if (params.genome_fasta && !params.genome_2bit) {
+        FA_TO_TWOBIT(genome_fasta)
+        genome_2bit = FA_TO_TWOBIT.out.twobit
+        ch_versions = ch_versions.mix(FA_TO_TWOBIT.out.versions)
+    }
 
     // samples channel
     sample_ch = channel.fromPath(params.input)
@@ -74,6 +83,7 @@ workflow {
     // collect versions in a single file simple mode
     VERSIONS(
         FRAGMENTOMICS.out.versions
+            .mix(ch_versions)
             .map { version_file ->
                 version_file.text
             }
