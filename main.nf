@@ -42,12 +42,12 @@ workflow {
     // samples channel
     sample_ch = channel.fromPath(params.input)
         .splitCsv(header:true, sep:',')
-        .map{ create_sample_channel(it) }
+        .map{ srow ->  create_sample_channel(srow) }
 
     // targets channel
     target_ch = channel.fromPath(params.targets)
         .splitCsv(header: true, sep:',')
-        .map{ create_target_channel(it) }
+        .map{ trow -> create_target_channel(trow) }
 
     // filter targets for lines if not stubrun
     if (workflow.stubRun == false) {
