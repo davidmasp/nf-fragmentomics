@@ -36,16 +36,16 @@ workflow {
 
     main:
     // Init param files
-    genome_2bit = params.genome_2bit ? Channel.fromPath(params.genome_2bit) : Channel.empty()
-    blacklist_bed = params.blacklist_bed ? Channel.fromPath(params.blacklist_bed) : Channel.empty()
+    genome_2bit = params.genome_2bit ? channel.fromPath(params.genome_2bit) : channel.empty()
+    blacklist_bed = params.blacklist_bed ? channel.fromPath(params.blacklist_bed) : channel.empty()
 
     // samples channel
-    sample_ch = Channel.fromPath(params.input)
+    sample_ch = channel.fromPath(params.input)
         .splitCsv(header:true, sep:',')
         .map{ create_sample_channel(it) }
 
     // targets channel
-    target_ch = Channel.fromPath(params.targets)
+    target_ch = channel.fromPath(params.targets)
         .splitCsv(header: true, sep:',')
         .map{ create_target_channel(it) }
 
