@@ -1,0 +1,14 @@
+name: nf-fragmentomics-env
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - conda-forge::r-base=4.4.2
+  - conda-forge::r-optparse=1.7.5
+  - conda-forge::r-readr=2.1.5
+  - conda-forge::r-dplyr=1.1.4
+  - conda-forge::r-stringr=1.5.1
+  - conda-forge::r-tibble=3.2.1
+  - conda-forge::r-ggplot2=3.5.1
+  - conda-forge::r-jsonlite=1.8.9
