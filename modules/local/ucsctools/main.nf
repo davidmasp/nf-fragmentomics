@@ -2,7 +2,7 @@
 
 process FA_TO_TWOBIT {
     tag "$fasta"
-    label 'process_low'
+    label 'process_high'
 
     /*
     container not available?

@@ -37,15 +37,16 @@ workflow {
 
     main:
     // Init param files
-    genome_fasta = params.genome_fasta ? channel.fromPath(params.genome_fasta) : channel.empty()
-    genome_2bit = params.genome_2bit ? channel.fromPath(params.genome_2bit) : channel.empty()
+    genome_fasta = params.genome_fasta ? channel.fromPath(params.genome_fasta) : channel.empty() 
     blacklist_bed = params.blacklist_bed ? channel.fromPath(params.blacklist_bed) : channel.empty()
 
     ch_versions = channel.empty()
-    if (params.genome_fasta && !params.genome_2bit) {
+    if (params.genome_fasta) {
         FA_TO_TWOBIT(genome_fasta)
         genome_2bit = FA_TO_TWOBIT.out.twobit
         ch_versions = ch_versions.mix(FA_TO_TWOBIT.out.versions)
+    } else {
+        genome_2bit = params.genome_2bit ? channel.fromPath(params.genome_2bit) : channel.empty()
     }
 
     // samples channel
@@ -72,7 +73,7 @@ workflow {
             by: 0,
             size: params.collate_size,
             remainder: true)
-
+     
     FRAGMENTOMICS(
         sample_ch,
         target_ch,
