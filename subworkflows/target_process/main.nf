@@ -2,6 +2,7 @@ include { COMPUTEMATRIX } from '../../modules/local/deeptools/computeMatrix/main
 include { HEATMAP       } from '../../modules/local/deeptools/heatmap/main.nf'
 include { PEAK_STATS    } from '../../modules/local/peakStats/main.nf'
 include { PEAK_COLLECT } from '../../modules/local/peakCollect/main.nf'
+include { LOESS_SCORE  } from '../../modules/local/loessScore/main.nf'
 
 workflow TARGET_PROCESS {
     take:
@@ -18,11 +19,13 @@ workflow TARGET_PROCESS {
         COMPUTEMATRIX(signal_target_ch)
         HEATMAP(COMPUTEMATRIX.out.matrix)
         PEAK_STATS(COMPUTEMATRIX.out.matrix)
+        LOESS_SCORE(COMPUTEMATRIX.out.matrix)
 
         ch_versions = ch_versions.mix(
             COMPUTEMATRIX.out.versions.first(),
             HEATMAP.out.versions.first(),
-            PEAK_STATS.out.versions.first()
+            PEAK_STATS.out.versions.first(),
+            LOESS_SCORE.out.versions.first()
         )
 
         peak_stats = PEAK_STATS.out.peaks
