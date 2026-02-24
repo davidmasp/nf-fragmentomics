@@ -1,5 +1,5 @@
 process PEAK_COLLECT {
-	label 'process_low'
+    label 'process_low'
 
     debug true
 
